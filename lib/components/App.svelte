@@ -1,8 +1,11 @@
 <script>
     import { swipe } from "svelte-gestures";
-    let direction;
+
     function handlerSwipe(event) {
-        direction = event.detail.direction;
+        move(event.detail.direction);
+    }
+
+    function move(direction) {
         switch (direction) {
             case "left":
                 if (--cx < 0) cx = mx - 1;
@@ -30,13 +33,7 @@
     let cy = Math.floor(my / 2);
 </script>
 
-<div class="action">
-    {#if direction}
-        Действие:
-        <span style="color: red;">{direction}</span>
-    {/if}
-</div>
-
+<div>Click or swipe to move the preview image.</div>
 <div
     class="swiper"
     use:swipe={{ timeframe: 300, minSwipeDistance: 100 }}
@@ -44,12 +41,17 @@
     style="justify-content: center; align-items: center;"
 >
     <table>
-        <tr><td colspan="3">&uarr;</td></tr>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <tr><td colspan="3" on:click={() => move("top")}>&uarr;</td></tr>
         <tr>
-            <td>&larr;</td>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <td on:click={() => move("left")}>&larr;</td>
             <td />
-            <td>&rarr;</td>
-        </tr><tr><td colspan="3">&darr;</td></tr>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <td on:click={() => move("right")}>&rarr;</td>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+        </tr><tr><td colspan="3" on:click={() => move("bottom")}>&darr;</td></tr
+        >
     </table>
 </div>
 
@@ -70,10 +72,6 @@
     * {
         margin: 0;
         padding: 0;
-    }
-    div.action {
-        display: block;
-        height: 1.5em;
     }
     div.swiper {
         width: 100%;
