@@ -38,7 +38,7 @@
     class="swiper"
     use:swipe={{ timeframe: 300, minSwipeDistance: 100 }}
     on:swipe={handlerSwipe}
-    style="justify-content: center; align-items: center;"
+    style=""
 >
     <table>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -49,9 +49,10 @@
             <td />
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <td on:click={() => move("right")}>&rarr;</td>
+        </tr><tr>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-        </tr><tr><td colspan="3" on:click={() => move("bottom")}>&darr;</td></tr
-        >
+            <td colspan="3" on:click={() => move("bottom")}>&darr;</td>
+        </tr>
     </table>
 </div>
 
@@ -76,9 +77,17 @@
     div.swiper {
         width: 100%;
         height: 300px;
+        justify-content: center;
+        align-items: center;
         box-sizing: border-box;
         border: 1px solid black;
     }
+    @media screen and (min-width: 1024px) {
+        div.swiper {
+            width: 300px;
+        }
+    }
+
     table {
         width: 100%;
         height: 100%;
@@ -88,6 +97,8 @@
         text-align: center;
         vertical-align: middle;
         font-size: 70px;
+        user-select: none;
+        cursor: pointer;
     }
     img.preview {
         height: 200px;
