@@ -109,7 +109,7 @@
     }
     div.swiper {
         width: 100%;
-        height: 300px;
+        aspect-ratio: 1;
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
