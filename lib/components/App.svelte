@@ -5,37 +5,36 @@
         move(event.detail.direction);
     }
 
+    const swiping = {
+        left: false,
+        right: false,
+        top: false,
+        bottom: false,
+    };
+
     function move(direction) {
-        switch (direction) {
-            case "left":
-                setTimeout(() => {
-                    if (--cx < 0) cx = mx - 1;
-                    left = false;
-                }, 1000);
-                left = true;
-                break;
-            case "right":
-                setTimeout(() => {
-                    if (++cx >= mx) cx = 0;
-                    right = false;
-                }, 1000);
-                right = true;
-                break;
-            case "top":
-                setTimeout(() => {
-                    if (--cy < 0) cy = my - 1;
-                    down = false;
-                }, 1000);
-                down = true;
-                break;
-            case "bottom":
-                setTimeout(() => {
-                    if (++cy >= my) cy = 0;
-                    up = false;
-                }, 1000);
-                up = true;
-                break;
+        function bounce(f) {
+            swiping[direction] = true;
+            setTimeout(() => {
+                f();
+                swiping[direction] = false;
+            }, 1000);
         }
+        const directions = {
+            left: () => {
+                if (--cx < 0) cx = mx - 1;
+            },
+            right: () => {
+                if (++cx >= mx) cx = 0;
+            },
+            top: () => {
+                if (--cy < 0) cy = my - 1;
+            },
+            bottom: () => {
+                if (++cy >= my) cy = 0;
+            },
+        };
+        bounce(directions[direction]);
     }
 
     import { files } from "./files.js";
@@ -47,11 +46,6 @@
 
     const my = images.length;
     let cy = Math.floor(my / 2);
-
-    let up = null,
-        down = null,
-        left = null,
-        right = null;
 </script>
 
 <div>Click or swipe to move the preview image.</div>
@@ -59,7 +53,6 @@
     class="swiper"
     use:swipe={{ timeframe: 300, minSwipeDistance: 100 }}
     on:swipe={handlerSwipe}
-    style=""
 >
     <table>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -98,10 +91,10 @@
         draggable="false"
         src={images[cy][cx]}
         class="preview"
-        class:preview-up={up}
-        class:preview-down={down}
-        class:preview-left={left}
-        class:preview-right={right}
+        class:preview-bottom={swiping.bottom}
+        class:preview-top={swiping.top}
+        class:preview-left={swiping.left}
+        class:preview-right={swiping.right}
     />
 </div>
 
@@ -147,11 +140,11 @@
         border: 1px solid black;
         box-sizing: border-box;
     }
-    img.preview-up {
-        animation: up 1s ease-in-out;
+    img.preview-bottom {
+        animation: bottom 1s ease-in-out;
     }
-    img.preview-down {
-        animation: down 1s ease-in-out;
+    img.preview-top {
+        animation: top 1s ease-in-out;
     }
     img.preview-left {
         animation: left 1s ease-in-out;
@@ -165,7 +158,7 @@
         height: auto;
         margin: 2px;
     }
-    @keyframes up {
+    @keyframes bottom {
         0% {
             margin-top: 0;
         }
@@ -173,7 +166,7 @@
             margin-top: 200px;
         }
     }
-    @keyframes down {
+    @keyframes top {
         0% {
             margin-top: 0;
         }
