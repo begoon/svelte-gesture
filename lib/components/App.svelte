@@ -39,6 +39,11 @@
         bounce(directions[direction]);
     }
 
+    function select(x, y) {
+        cx = x;
+        cy = y;
+    }
+
     import Arrow from "./Arrow.svelte";
     import { files } from "./files.js";
 
@@ -89,7 +94,14 @@
         {#each names as name, x}
             {@const current = x === cx && y === cy}
             <!-- svelte-ignore a11y-missing-attribute -->
-            <img src={name} class="icon" class:current />
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <img
+                src={name}
+                class="icon"
+                class:current
+                on:click={() => select(x, y)}
+                on:tap={() => select(x, y)}
+            />
         {/each}
     </ul>
     <!-- svelte-ignore a11y-missing-attribute -->
@@ -162,6 +174,7 @@
         width: 30px;
         height: auto;
         margin: 2px;
+        cursor: pointer;
     }
     @keyframes bottom {
         0% {
@@ -197,5 +210,6 @@
     }
     img.current {
         outline: 2px solid red;
+        pointer-events: none;
     }
 </style>
