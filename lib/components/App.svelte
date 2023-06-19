@@ -48,24 +48,45 @@
     let cy = Math.floor(my / 2);
 </script>
 
-<div>Click or swipe to move the preview image.</div>
+<div>Use arrows or swipe to switch the image.</div>
 <div
     class="swiper"
-    use:swipe={{ timeframe: 300, minSwipeDistance: 100 }}
+    use:swipe={{ timeframe: 300, minSwipeDistance: 50 }}
     on:swipe={handlerSwipe}
 >
     <table>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <tr><td colspan="3" on:click={() => move("top")}>&uarr;</td></tr>
+        <tr><td colspan="3" on:click={() => move("top")}>⇧</td></tr>
         <tr>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td on:click={() => move("left")}>&larr;</td>
-            <td />
+            <td on:click={() => move("left")}>
+                <div style="transform: rotate(270deg);">⇧</div>
+            </td>
+            <td
+                style="display: flex; justify-content: center; align-items: center; height:100%"
+            >
+                <div class="preview">
+                    <!-- svelte-ignore a11y-missing-attribute -->
+                    <img
+                        draggable="false"
+                        src={images[cy][cx]}
+                        class="preview"
+                        class:preview-bottom={swiping.bottom}
+                        class:preview-top={swiping.top}
+                        class:preview-left={swiping.left}
+                        class:preview-right={swiping.right}
+                    />
+                </div>
+            </td>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td on:click={() => move("right")}>&rarr;</td>
+            <td on:click={() => move("right")}>
+                <div style="transform: rotate(90deg);">⇧</div>
+            </td>
         </tr><tr>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td colspan="3" on:click={() => move("bottom")}>&darr;</td>
+            <td colspan="3" on:click={() => move("bottom")}>
+                <div style="transform: rotate(180deg);">⇧</div>
+            </td>
         </tr>
     </table>
 </div>
@@ -80,23 +101,6 @@
     </ul>
     <!-- svelte-ignore a11y-missing-attribute -->
 {/each}
-
-<div
-    class="preview"
-    use:swipe={{ timeframe: 300, minSwipeDistance: 50 }}
-    on:swipe={handlerSwipe}
->
-    <!-- svelte-ignore a11y-missing-attribute -->
-    <img
-        draggable="false"
-        src={images[cy][cx]}
-        class="preview"
-        class:preview-bottom={swiping.bottom}
-        class:preview-top={swiping.top}
-        class:preview-left={swiping.left}
-        class:preview-right={swiping.right}
-    />
-</div>
 
 <style>
     * {
@@ -125,7 +129,7 @@
     td {
         text-align: center;
         vertical-align: middle;
-        font-size: 70px;
+        font-size: 40px;
         user-select: none;
         cursor: pointer;
     }
@@ -137,6 +141,8 @@
     }
     img.preview {
         position: absolute;
+        top: 0;
+        left: 0;
         border: 1px solid black;
         box-sizing: border-box;
     }
