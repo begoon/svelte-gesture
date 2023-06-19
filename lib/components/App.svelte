@@ -1,43 +1,22 @@
 <script>
     import { swipe } from "svelte-gestures";
 
-    function handlerSwipe(event) {
-        move(event.detail.direction);
-    }
+    let direction;
 
-    const swiping = {
-        left: false,
-        right: false,
-        top: false,
-        bottom: false,
+    const directions = {
+        left: () => {
+            if (--cx < 0) cx = mx - 1;
+        },
+        right: () => {
+            if (++cx >= mx) cx = 0;
+        },
+        top: () => {
+            if (--cy < 0) cy = my - 1;
+        },
+        bottom: () => {
+            if (++cy >= my) cy = 0;
+        },
     };
-
-    function move(direction) {
-        function bounce(f) {
-            swiping[direction] = true;
-            setTimeout(() => {
-                f();
-                setTimeout(() => {
-                    swiping[direction] = false;
-                }, 100);
-            }, 1000);
-        }
-        const directions = {
-            left: () => {
-                if (--cx < 0) cx = mx - 1;
-            },
-            right: () => {
-                if (++cx >= mx) cx = 0;
-            },
-            top: () => {
-                if (--cy < 0) cy = my - 1;
-            },
-            bottom: () => {
-                if (++cy >= my) cy = 0;
-            },
-        };
-        bounce(directions[direction]);
-    }
 
     function select(x, y) {
         cx = x;
@@ -60,32 +39,29 @@
 <div
     class="swiper"
     use:swipe={{ timeframe: 300, minSwipeDistance: 50 }}
-    on:swipe={handlerSwipe}
+    on:swipe={(event) => (direction = event.detail.direction)}
 >
     <table>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <tr><td colspan="3"><Arrow direction="top" {move} /></td></tr>
+        <tr><td colspan="3"><Arrow to="top" bind:direction /></td></tr>
         <tr>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td><Arrow direction="left" {move} /></td>
+            <td><Arrow to="left" bind:direction /></td>
             <td class="preview">
                 <div class="preview">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         draggable="false"
                         src={images[cy][cx]}
-                        class="preview"
-                        class:preview-bottom={swiping.bottom}
-                        class:preview-top={swiping.top}
-                        class:preview-left={swiping.left}
-                        class:preview-right={swiping.right}
+                        class="preview swipe-{direction}"
+                        on:animationend={() => {
+                            directions[direction]();
+                            direction = null;
+                        }}
                     />
                 </div>
             </td>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td><Arrow direction="right" {move} /></td>
+            <td><Arrow to="right" bind:direction /></td>
         </tr>
-        <tr><td colspan="3"><Arrow direction="bottom" {move} /></td></tr>
+        <tr><td colspan="3"><Arrow to="bottom" bind:direction /></td></tr>
     </table>
 </div>
 
@@ -104,7 +80,6 @@
             />
         {/each}
     </ul>
-    <!-- svelte-ignore a11y-missing-attribute -->
 {/each}
 
 <style>
@@ -157,16 +132,16 @@
         border: 1px solid black;
         box-sizing: border-box;
     }
-    img.preview-bottom {
+    img.swipe-bottom {
         animation: bottom 1s ease-in-out forwards;
     }
-    img.preview-top {
+    img.swipe-top {
         animation: top 1s ease-in-out forwards;
     }
-    img.preview-left {
+    img.swipe-left {
         animation: left 1s ease-in-out forwards;
     }
-    img.preview-right {
+    img.swipe-right {
         animation: right 1s ease-in-out forwards;
     }
     img.icon {

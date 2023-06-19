@@ -1,16 +1,16 @@
 <script>
+    export let to;
     export let direction;
-    export let move;
 
     const angle = {
         top: 0,
         right: 90,
         bottom: 180,
         left: 270,
-    }[direction];
+    }[to];
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div style="transform: rotate({angle}deg);" on:click={() => move(direction)}>
+<div style="transform: rotate({angle}deg);" on:click={() => (direction = to)}>
     ⇧
 </div>
