@@ -37,6 +37,7 @@
         bounce(directions[direction]);
     }
 
+    import Arrow from "./Arrow.svelte";
     import { files } from "./files.js";
 
     const images = files();
@@ -56,15 +57,11 @@
 >
     <table>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <tr><td colspan="3" on:click={() => move("top")}>⇧</td></tr>
+        <tr><td colspan="3"><Arrow direction="top" {move} /></td></tr>
         <tr>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td on:click={() => move("left")}>
-                <div style="transform: rotate(270deg);">⇧</div>
-            </td>
-            <td
-                style="display: flex; justify-content: center; align-items: center; height:100%"
-            >
+            <td><Arrow direction="left" {move} /></td>
+            <td class="preview">
                 <div class="preview">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
@@ -79,15 +76,9 @@
                 </div>
             </td>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td on:click={() => move("right")}>
-                <div style="transform: rotate(90deg);">⇧</div>
-            </td>
-        </tr><tr>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <td colspan="3" on:click={() => move("bottom")}>
-                <div style="transform: rotate(180deg);">⇧</div>
-            </td>
+            <td><Arrow direction="right" {move} /></td>
         </tr>
+        <tr><td colspan="3"><Arrow direction="bottom" {move} /></td></tr>
     </table>
 </div>
 
@@ -113,7 +104,7 @@
         aspect-ratio: 1;
         justify-content: center;
         align-items: center;
-        box-sizing: border-box;
+        box-sizing: bordaer-box;
         border: 1px solid black;
     }
     @media screen and (min-width: 1024px) {
@@ -121,7 +112,6 @@
             width: 300px;
         }
     }
-
     table {
         width: 100%;
         height: 100%;
@@ -133,6 +123,12 @@
         font-size: 40px;
         user-select: none;
         cursor: pointer;
+    }
+    td .preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
     }
     .preview {
         position: relative;
