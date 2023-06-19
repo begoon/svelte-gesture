@@ -147,7 +147,6 @@
     }
     img.preview-bottom {
         animation: bottom 1s ease-in-out forwards;
-        opacity: 0.5;
     }
     img.preview-top {
         animation: top 1s ease-in-out forwards;
