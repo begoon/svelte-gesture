@@ -8,16 +8,32 @@
     function move(direction) {
         switch (direction) {
             case "left":
-                if (--cx < 0) cx = mx - 1;
+                setTimeout(() => {
+                    if (--cx < 0) cx = mx - 1;
+                    left = false;
+                }, 1000);
+                left = true;
                 break;
             case "right":
-                if (++cx >= mx) cx = 0;
+                setTimeout(() => {
+                    if (++cx >= mx) cx = 0;
+                    right = false;
+                }, 1000);
+                right = true;
                 break;
             case "top":
-                if (--cy < 0) cy = my - 1;
+                setTimeout(() => {
+                    if (--cy < 0) cy = my - 1;
+                    down = false;
+                }, 1000);
+                down = true;
                 break;
             case "bottom":
-                if (++cy >= my) cy = 0;
+                setTimeout(() => {
+                    if (++cy >= my) cy = 0;
+                    up = false;
+                }, 1000);
+                up = true;
                 break;
         }
     }
@@ -31,6 +47,11 @@
 
     const my = images.length;
     let cy = Math.floor(my / 2);
+
+    let up = null,
+        down = null,
+        left = null,
+        right = null;
 </script>
 
 <div>Click or swipe to move the preview image.</div>
@@ -66,8 +87,23 @@
     </ul>
     <!-- svelte-ignore a11y-missing-attribute -->
 {/each}
-<!-- svelte-ignore a11y-missing-attribute -->
-<img src={images[cy][cx]} class="preview" />
+
+<div
+    class="preview"
+    use:swipe={{ timeframe: 300, minSwipeDistance: 50 }}
+    on:swipe={handlerSwipe}
+>
+    <!-- svelte-ignore a11y-missing-attribute -->
+    <img
+        draggable="false"
+        src={images[cy][cx]}
+        class="preview"
+        class:preview-up={up}
+        class:preview-down={down}
+        class:preview-left={left}
+        class:preview-right={right}
+    />
+</div>
 
 <style>
     * {
@@ -100,16 +136,66 @@
         user-select: none;
         cursor: pointer;
     }
-    img.preview {
+    .preview {
+        position: relative;
         height: 200px;
-        width: auto;
+        width: 200px;
+        overflow: hidden;
+    }
+    img.preview {
+        position: absolute;
         border: 1px solid black;
+        box-sizing: border-box;
+    }
+    img.preview-up {
+        animation: up 1s ease-in-out;
+    }
+    img.preview-down {
+        animation: down 1s ease-in-out;
+    }
+    img.preview-left {
+        animation: left 1s ease-in-out;
+    }
+    img.preview-right {
+        animation: right 1s ease-in-out;
     }
     img.icon {
         display: inline-block;
         width: 30px;
         height: auto;
         margin: 2px;
+    }
+    @keyframes up {
+        0% {
+            margin-top: 0;
+        }
+        100% {
+            margin-top: 200px;
+        }
+    }
+    @keyframes down {
+        0% {
+            margin-top: 0;
+        }
+        100% {
+            margin-top: -200px;
+        }
+    }
+    @keyframes left {
+        0% {
+            margin-left: 0;
+        }
+        100% {
+            margin-left: -200px;
+        }
+    }
+    @keyframes right {
+        0% {
+            margin-left: 0;
+        }
+        100% {
+            margin-left: 200px;
+        }
     }
     img.current {
         outline: 2px solid red;
