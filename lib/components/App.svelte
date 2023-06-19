@@ -17,7 +17,9 @@
             swiping[direction] = true;
             setTimeout(() => {
                 f();
-                swiping[direction] = false;
+                setTimeout(() => {
+                    swiping[direction] = false;
+                }, 100);
             }, 1000);
         }
         const directions = {
@@ -144,16 +146,17 @@
         box-sizing: border-box;
     }
     img.preview-bottom {
-        animation: bottom 1s ease-in-out;
+        animation: bottom 1s ease-in-out forwards;
+        opacity: 0.5;
     }
     img.preview-top {
-        animation: top 1s ease-in-out;
+        animation: top 1s ease-in-out forwards;
     }
     img.preview-left {
-        animation: left 1s ease-in-out;
+        animation: left 1s ease-in-out forwards;
     }
     img.preview-right {
-        animation: right 1s ease-in-out;
+        animation: right 1s ease-in-out forwards;
     }
     img.icon {
         display: inline-block;
