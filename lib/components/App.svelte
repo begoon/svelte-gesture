@@ -106,6 +106,7 @@
     * {
         margin: 0;
         padding: 0;
+        --swiper-size: 200px;
     }
     div.swiper {
         width: 100%;
@@ -135,8 +136,8 @@
     }
     .preview {
         position: relative;
-        height: 200px;
-        width: 200px;
+        height: var(--swiper-size);
+        width: var(--swiper-size);
         overflow: hidden;
     }
     img.preview {
@@ -169,7 +170,7 @@
             margin-top: 0;
         }
         100% {
-            margin-top: 200px;
+            margin-top: var(--swiper-size);
         }
     }
     @keyframes top {
@@ -177,7 +178,7 @@
             margin-top: 0;
         }
         100% {
-            margin-top: -200px;
+            margin-top: calc(-1 * var(--swiper-size));
         }
     }
     @keyframes left {
@@ -185,7 +186,7 @@
             margin-left: 0;
         }
         100% {
-            margin-left: -200px;
+            margin-left: calc(-1 * var(--swiper-size));
         }
     }
     @keyframes right {
@@ -193,7 +194,7 @@
             margin-left: 0;
         }
         100% {
-            margin-left: 200px;
+            margin-left: var(--swiper-size);
         }
     }
     img.current {
